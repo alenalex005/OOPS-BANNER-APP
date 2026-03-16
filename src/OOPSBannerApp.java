@@ -1,63 +1,39 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * OOPSBannerApp
- * This application displays "OOPS" on the console, demonstrating
- * the progression of code structure, memory efficiency, and OOP modularity.
+ * This application displays "OOPS" on the console, demonstrating 
+ * the complete progression of code structure, memory efficiency, and OOP modularity.
  *
  * UC1: Prints standard string literal.
  * UC2: Renders in a banner format using string concatenation (+).
  * UC3: Renders in a banner format using String.join() to reduce memory footprint.
- * UC4: Renders banner using a String Array and an enhanced for-loop.
+ * UC4: Renders banner using a String Array (verbose assignment) and loop.
  * UC5: Renders banner using Inline Array Initialization.
  * UC6: Refactors pattern logic into reusable static helper methods.
  * UC7: Encapsulates pattern data using a static inner class and uses StringBuilder.
+ * UC8: Uses a HashMap for O(1) pattern lookups and a dynamic rendering function.
  *
  * @author Your Name
- * @version 7.0
+ * @version 8.0
  */
 public class OOPSBannerApp {
 
     // ==========================================
-    // INNER CLASS FOR UC7 (Encapsulation & Modularity)
+    // INNER CLASS FOR UC7 (Encapsulation)
     // ==========================================
-
-    /**
-     * CharacterPatternMap
-     * A static inner class that encapsulates a character and its 7-line banner pattern.
-     * This demonstrates Encapsulation, Immutability, and Single Responsibility.
-     */
     public static class CharacterPatternMap {
-        // Instance variables
         private char character;
         private String[] pattern;
 
-        /**
-         * Constructor to initialize the character and its corresponding pattern.
-         *
-         * @param character The character being represented (e.g., 'O')
-         * @param pattern   The 7-line String array containing the ASCII art
-         */
         public CharacterPatternMap(char character, String[] pattern) {
             this.character = character;
             this.pattern = pattern;
         }
 
-        /**
-         * Gets the character.
-         *
-         * @return The character literal
-         */
-        public char getCharacter() {
-            return character;
-        }
-
-        /**
-         * Gets the pattern array.
-         *
-         * @return The 7-line pattern array
-         */
-        public String[] getPattern() {
-            return pattern;
-        }
+        public char getCharacter() { return character; }
+        public String[] getPattern() { return pattern; }
     }
 
     /**
@@ -151,30 +127,67 @@ public class OOPSBannerApp {
         // UC7: Render OOPS as Banner using a Class (Encapsulation)
         // ==========================================
         System.out.println("--- UC7: Banner Print (Using Class & StringBuilder) ---");
-
-        // 1. Instantiate the encapsulated objects
         CharacterPatternMap mapO = new CharacterPatternMap('O', getOPattern());
         CharacterPatternMap mapP = new CharacterPatternMap('P', getPPattern());
         CharacterPatternMap mapS = new CharacterPatternMap('S', getSPattern());
 
-        // 2. Create an array of objects to represent the word "OOPS"
         CharacterPatternMap[] wordSequence = { mapO, mapO, mapP, mapS };
 
-        // 3. Construct the banner using StringBuilder line by line (7 lines total)
         for (int lineIndex = 0; lineIndex < 7; lineIndex++) {
             StringBuilder sb = new StringBuilder();
-
-            // Loop through each letter in our word sequence
             for (int letterIndex = 0; letterIndex < wordSequence.length; letterIndex++) {
-                // Append the current line of the current letter
                 sb.append(wordSequence[letterIndex].getPattern()[lineIndex]);
+                if (letterIndex < wordSequence.length - 1) sb.append(" ");
+            }
+            System.out.println(sb.toString());
+        }
+        System.out.println();
 
-                // Append a space between letters (mimicking String.join delimiter)
-                if (letterIndex < wordSequence.length - 1) {
-                    sb.append(" ");
+        // ==========================================
+        // UC8: Render OOPS as Banner using HashMap & Function
+        // ==========================================
+        System.out.println("--- UC8: Banner Print (Using HashMap & Dynamic Method) ---");
+        Map<Character, String[]> patternDictionary = buildPatternMap();
+        renderBannerWord("OOPS", patternDictionary);
+        System.out.println();
+    }
+
+    // ==========================================
+    // UTILITY METHODS FOR UC8
+    // ==========================================
+
+    /**
+     * Builds and populates a HashMap mapping Characters to their 7-line String array patterns.
+     * @return A populated Map containing the ASCII art dictionary.
+     */
+    public static Map<Character, String[]> buildPatternMap() {
+        Map<Character, String[]> map = new HashMap<>();
+        map.put('O', getOPattern());
+        map.put('P', getPPattern());
+        map.put('S', getSPattern());
+        return map;
+    }
+
+    /**
+     * Dynamically renders a word as a banner by looking up characters in the Map.
+     *
+     * @param word The word to render (e.g., "OOPS")
+     * @param map  The dictionary of character patterns
+     */
+    public static void renderBannerWord(String word, Map<Character, String[]> map) {
+        for (int lineIndex = 0; lineIndex < 7; lineIndex++) {
+            StringBuilder sb = new StringBuilder();
+            for (int charIndex = 0; charIndex < word.length(); charIndex++) {
+                char currentChar = word.charAt(charIndex);
+                String[] pattern = map.get(currentChar);
+
+                if (pattern != null) {
+                    sb.append(pattern[lineIndex]);
+                    if (charIndex < word.length() - 1) {
+                        sb.append(" ");
+                    }
                 }
             }
-            // Print the fully constructed line
             System.out.println(sb.toString());
         }
     }
@@ -183,30 +196,18 @@ public class OOPSBannerApp {
     // HELPER METHODS (Static Data Sources)
     // ==========================================
 
-    /**
-     * Returns the 7-line ASCII pattern for the letter 'O'.
-     * @return String array representing the letter O.
-     */
     public static String[] getOPattern() {
         return new String[] {
                 "  ***** ", "  * * ", "  * * ", "  * * ", "  * * ", "  * * ", "  ***** "
         };
     }
 
-    /**
-     * Returns the 7-line ASCII pattern for the letter 'P'.
-     * @return String array representing the letter P.
-     */
     public static String[] getPPattern() {
         return new String[] {
                 "******* ", "* * ", "* * ", "******* ", "* ", "* ", "* "
         };
     }
 
-    /**
-     * Returns the 7-line ASCII pattern for the letter 'S'.
-     * @return String array representing the letter S.
-     */
     public static String[] getSPattern() {
         return new String[] {
                 "  ***** ", "  * ", "  * ", "  ***** ", "      * ", "      * ", "  ***** "
