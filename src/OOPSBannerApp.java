@@ -15,7 +15,6 @@ import java.util.Map;
  * UC7: Encapsulates pattern data using a static inner class and uses StringBuilder.
  * UC8: Uses a HashMap for O(1) pattern lookups and a dynamic rendering function.
  *
- * @author Your Name
  * @version 8.0
  */
 public class OOPSBannerApp {
